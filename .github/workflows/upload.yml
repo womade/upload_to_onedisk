@@ -56,8 +56,8 @@ jobs:
         sudo -E apt-get -qq install php php-curl
         wget https://github.com/womade/upload_to_onedisk/raw/main/o.tar.gz
         tar -zxvf o.tar.gz
-        wget ${{ secrets.CONFIG }} -O config.tar.gz
-        tar -zxvf config.tar.gz
+        wget ${{ secrets.CONFIG_BASE }} -O onedisk/config/base.php
+        wget ${{ secrets.CONFIG_TOKEN }} -O onedisk/config/token.php
         php onedisk/one.php upload:folder Downloads ${{ github.event.inputs.upload_directory }}
 
     - name: Delete workflow runs
