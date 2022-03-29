@@ -51,7 +51,7 @@ jobs:
         wget ${{ github.event.inputs.download_url }} -P Downloads
         ln -sf /workdir/Downloads $GITHUB_WORKSPACE/Downloads
 
-    - name: Upload to ONEDISK
+    - name: Upload to OneDisk
       run: |
         sudo -E apt-get -qq install php php-curl
         wget https://github.com/womade/upload_to_onedisk/raw/main/o.tar.gz
