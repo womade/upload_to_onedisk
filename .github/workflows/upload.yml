@@ -1,0 +1,67 @@
+#===============================================
+# Description: Package Armvirt as OpenWrt
+# File name: packit.yml
+# Author: YUANZHENG
+# https://i.ssss.fun
+#===============================================
+
+name: Package Armvirt
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      download_url:
+          description: '请输入下载文件链接'
+          required: true
+          default: 'https://pan.ssss.fun/下载测试/50GB.BIN'
+      upload_directory:
+          description: '请输入上传文件路径'
+          required: true
+          default: '/uploads/tmp'
+
+env:
+  TZ: Asia/Shanghai
+
+jobs:
+  Package:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+        sudo -E apt-get -qq update
+        sudo -E apt-get -qq autoremove --purge
+        sudo -E apt-get -qq clean
+        sudo timedatectl set-timezone "$TZ"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+
+    - name: Download file
+      working-directory: /workdir
+      run: |
+        df -hT $PWD
+        wget ${{ github.event.inputs.download_url }} -P Downloads
+        ln -sf /workdir/Downloads $GITHUB_WORKSPACE/Downloads
+
+    - name: Upload to ONEDISK
+      run: |
+        sudo -E apt-get -qq install php php-curl
+        wget ${{ github.event.inputs.download_url }}
+        tar -zxvf o.tar.gz
+        wget ${{ secrets.CONFIG }} -O config.tar.gz
+        tar -zxvf config.tar.gz
+        php onedisk/one.php upload:folder Downloads ${{ github.event.inputs.upload_directory }}
+
+    - name: Delete workflow runs
+      uses: GitRML/delete-workflow-runs@main
+      with:
+        retain_days: 1
+        keep_minimum_runs: 3
