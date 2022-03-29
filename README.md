@@ -3,6 +3,7 @@
 
 ### 上传文件
 ```
+sudo -E apt-get -qq install php php-curl
 wget https://github.com/womade/upload_to_onedisk/raw/main/o.tar.gz
 tar -zxvf o.tar.gz
 wget ${{ secrets.CONFIG }} -O config.tar.gz
