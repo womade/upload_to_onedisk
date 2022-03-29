@@ -1,11 +1,11 @@
 #===============================================
-# Description: Download & Upload
+# Description: Upload to OneDisk
 # File name: upload.yml
 # Author: YUANZHENG
 # https://i.ssss.fun
 #===============================================
 
-name: Package Armvirt
+name: Upload to OneDisk
 
 on:
   repository_dispatch:
